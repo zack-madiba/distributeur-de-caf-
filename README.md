@@ -1,9 +1,5 @@
 # Analyse Complète des Ventes d'un Distributeur de Café
 
-![](images/le%20produit%20le%20plus%20consom%C3%A9%20(quantit%C3%A9)%20de%20chaque%20%20mois.png)
-
-![](images/le%20produit%20le%20plus%20consom%C3%A9%20(quantit%C3%A9)%20de%20chaque%20%20mois.png)
-
 
 
 ***
