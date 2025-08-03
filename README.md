@@ -1,19 +1,5 @@
 # Analyse Complète des Ventes d'un Distributeur de Café
 
-## Table des Matières
-- [I. Contexte du Projet](#i-contexte-du-projet)
-- [II. Objectifs](#ii-objectifs)
-- [III. Architecture Technique](#iii-architecture-technique)
-- [IV. Pipeline de Données](#iv-pipeline-de-données)
-- [V. Modélisation des Données](#v-modélisation-des-données)
-- [VI. Traitement et Enrichissement](#vi-traitement-et-enrichissement)
-- [VII. Résultats et Insights](#vii-résultats-et-insights)
-- [VIII. Technologies Utilisées](#viii-technologies-utilisées)
-- [IX. Guide d'Installation](#ix-guide-dinstallation)
-- [X. Utilisation](#x-utilisation)
-
----
-
 ## I. Contexte du Projet
 
 En tant que **Data Engineer** pour une enseigne spécialisée dans la vente de boissons chaudes à New York, j'ai développé une solution complète d'analyse des données de vente. L'entreprise exploite plusieurs magasins répartis sur différents quartiers et souhaite optimiser ses décisions commerciales grâce à l'analyse de ses données transactionnelles.
