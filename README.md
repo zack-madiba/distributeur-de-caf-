@@ -1,5 +1,9 @@
 # Analyse Complète des Ventes d'un Distributeur de Café
 
+![](images/le%20produit%20le%20plus%20consom%C3%A9%20(quantit%C3%A9)%20de%20chaque%20%20mois.png)
+
+![](images/le%20produit%20le%20plus%20consom%C3%A9%20(quantit%C3%A9)%20de%20chaque%20%20mois.png)
+
 
 
 ***
@@ -226,7 +230,7 @@ def download_dataset(path):
 - **Performance optimisée** avec indexation stratégique
 - **Données géolocalisées** prêtes pour la cartographie
 
-### Requêtes d'Exploitation Développées
+### Requêtes d'exploitation des données :
 
 #### 1. Top 5 Produits par Recette Globale
 
@@ -249,9 +253,7 @@ ORDER BY SUM(fs.quantity * fs.unit_price) DESC
 LIMIT 5;
 ```
 
-![](5%20produits%20g%C3%A9n%C3%A9rant%20le%20plus%20de%20recette,%20avec%20leurs%20cat%C3%A9gories,%20types,%20et%20villes%20globalement.png)
-
-
+![](images/5%20produits%20g%C3%A9n%C3%A9rant%20le%20plus%20de%20recette,%20avec%20leurs%20cat%C3%A9gories,%20types,%20et%20villes%20globalement.png)
 
 
 
@@ -280,7 +282,9 @@ WHERE rang = 1
 ORDER BY mois;
 ```
 
-![](top%20de%20vente%20(recette)%20par%20mois.png)
+![](images/top%20de%20vente%20(recette)%20par%20mois.png)
+
+
 
 
 
@@ -311,6 +315,16 @@ ORDER BY mois;
 ```
 
 ![](images/le%20produit%20le%20plus%20consom%C3%A9%20(quantit%C3%A9)%20de%20chaque%20%20mois.png)
+
+
+
+
+
+
+
+### Dashbord Power BI d'exploitation des données
+
+![](images/dashboard_powerbi.png)
 
 
 
@@ -364,12 +378,12 @@ import shutil
 
 ### Prérequis
 
-- Python 3.8+
-- PostgreSQL 12+
+- Python 3
+- PostgreSQL (version>=12)
 - Compte Kaggle configuré avec API
 - Packages Python requis (voir requirements.txt)
 
-### Configuration Base de Données
+### Connexion à la Bdd postgres
 
 ```python
 # Paramètres de connexion à ajuster
