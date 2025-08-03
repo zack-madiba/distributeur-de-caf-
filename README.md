@@ -249,37 +249,13 @@ ORDER BY SUM(fs.quantity * fs.unit_price) DESC
 LIMIT 5;
 ```
 
-#### 2. Top 5 Produits des Deux Derniers Mois
+![](5%20produits%20g%C3%A9n%C3%A9rant%20le%20plus%20de%20recette,%20avec%20leurs%20cat%C3%A9gories,%20types,%20et%20villes%20globalement.png)
 
-```sql
--- Analyse de performance récente avec CTE pour gestion des dates
-WITH limites_dates AS (
-    SELECT 
-        MAX(full_date) AS max_date,
-        DATE_TRUNC('month', MAX(full_date)) - INTERVAL '1 month' AS debut_avant_dernier_mois
-    FROM date_sales
-)
-SELECT 
-    p.product_detail AS "Produit", 
-    pc.categorie AS Categorie,
-    pt.type AS Type,
-    SUM(fs.quantity * fs.unit_price) AS Recette,
-    ls.store_location AS Ville
-FROM fact_sales fs
-JOIN product p ON fs.product_id = p.product_id
-JOIN product_categorie pc ON pc.id_categorie = p.id_categorie
-JOIN product_type pt ON pt.id_type = p.id_type
-JOIN location_sales ls ON ls.id_location = fs.location_id
-JOIN date_sales ds ON ds.id_date = fs.date_id
-JOIN limites_dates ld ON TRUE
-WHERE ds.full_date >= ld.debut_avant_dernier_mois
-  AND ds.full_date <= ld.max_date
-GROUP BY p.product_detail, pc.categorie, pt.type, ls.store_location
-ORDER BY Recette DESC
-LIMIT 5;
-```
 
-#### 3. Meilleur Produit par Recette Mensuelle
+
+
+
+#### 2. Meilleur Produit par Recette Mensuelle
 
 ```sql
 -- Évolution du leadership produit avec fonctions de fenêtrage
@@ -304,7 +280,11 @@ WHERE rang = 1
 ORDER BY mois;
 ```
 
-#### 4. Produit le Plus Consommé par Mois (Quantité)
+![](top%20de%20vente%20(recette)%20par%20mois.png)
+
+
+
+#### 3. Produit le Plus Consommé par Mois (Quantité)
 
 ```sql
 -- Analyse de volume avec ROW_NUMBER pour éliminer les ex-aequo
@@ -329,6 +309,10 @@ FROM classement
 WHERE rang = 1
 ORDER BY mois;
 ```
+
+![](images/le%20produit%20le%20plus%20consom%C3%A9%20(quantit%C3%A9)%20de%20chaque%20%20mois.png)
+
+
 
 ### Explications Techniques des Requêtes
 
@@ -385,24 +369,6 @@ import shutil
 - Compte Kaggle configuré avec API
 - Packages Python requis (voir requirements.txt)
 
-### Installation
-
-```bash
-# Cloner le repository
-git clone [repository-url]
-cd coffee-sales-analysis
-
-# Installer les dépendances
-pip install -r requirements.txt
-pip install kagglehub
-
-# Configurer l'API Kaggle (authentification requise)
-# Placer le fichier kaggle.json dans ~/.kaggle/
-
-# Configurer PostgreSQL
-# Créer un utilisateur et ajuster les credentials dans le script
-```
-
 ### Configuration Base de Données
 
 ```python
@@ -445,10 +411,6 @@ python coffee_sales_etl.py
 ✅ Données chargées et indexées
 ✅ Pipeline ETL terminé avec succès
 ````
-
-***
-
-
 
 ***
 
