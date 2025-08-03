@@ -388,11 +388,11 @@ import shutil
 ```python
 # Paramètres de connexion à ajuster
 conn = psycopg2.connect(
-    host="localhost",
-    dbname="postgres", 
-    user="postgres",
-    password="1212",
-    port="5432"
+    host="######",
+    dbname="######", 
+    user="#####",
+    password="#####",
+    port="#####"
 )
 ```
 
