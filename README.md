@@ -116,6 +116,10 @@ for store in unique_stores:
 
 ### Schéma en Étoile (Star Schema)
 
+![](images/shema_bdd.png)
+
+
+
 #### Table de Faits
 
 **`fact_sales`** **fact_sales** **fact_sales** - Table centrale des transactions
@@ -388,11 +392,11 @@ import shutil
 ```python
 # Paramètres de connexion à ajuster
 conn = psycopg2.connect(
-    host="######",
-    dbname="######", 
-    user="#####",
-    password="#####",
-    port="#####"
+    host="localhost",
+    dbname="postgres", 
+    user="postgres",
+    password="1212",
+    port="5432"
 )
 ```
 
