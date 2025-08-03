@@ -1,20 +1,26 @@
 # Analyse Complète des Ventes d'un Distributeur de Café
 
+
+
+***
+
 ## I. Contexte du Projet
 
 En tant que **Data Engineer** pour une enseigne spécialisée dans la vente de boissons chaudes à New York, j'ai développé une solution complète d'analyse des données de vente. L'entreprise exploite plusieurs magasins répartis sur différents quartiers et souhaite optimiser ses décisions commerciales grâce à l'analyse de ses données transactionnelles.
 
 ### Problématique Business
+
 - Manque de visibilité sur les performances des différents points de vente
 - Besoin d'identifier les tendances de consommation par période et localisation
 - Optimisation de l'offre produit selon les préférences clients
 - Amélioration de la planification des stocks et des ressources
 
----
+***
 
 ## II. Objectifs
 
 ### Objectifs Techniques
+
 - [x] Collecter et ingérer les données depuis un fichier Excel
 - [x] Concevoir et implémenter une base de données PostgreSQL optimisée
 - [x] Développer un pipeline ETL robuste pour le nettoyage des données
@@ -22,16 +28,17 @@ En tant que **Data Engineer** pour une enseigne spécialisée dans la vente de b
 - [x] Enrichir les données avec la géolocalisation des magasins
 
 ### Objectifs Business
+
 - [x] Analyser les performances de vente par magasin et période
 - [x] Identifier les produits les plus populaires
 - [x] Comprendre les patterns de consommation temporels
 - [x] Fournir des insights exploitables aux équipes métier
 
----
+***
 
 ## III. Architecture Technique
 
-```
+````
 ┌─────────────────┐    ┌──────────────────┐    ┌─────────────────┐
 │   Fichier       │    │   Pipeline       │    │   Base de       │
 │   Excel         │───▶│   ETL            │───▶│   Données       │
@@ -43,19 +50,21 @@ En tant que **Data Engineer** pour une enseigne spécialisée dans la vente de b
                     │   Enrichissement │    │   Modélisation  │
                     │   Géolocalisation│    │   Star Schema   │
                     └──────────────────┘    └─────────────────┘
-```
+````
 
----
+***
 
 ## IV. Pipeline de Données
 
 ### 1. Extraction des Données
+
 - **Source** : Dataset Kaggle "Coffee Sales" (ahmedabbas757/coffee-sales)
 - **Format** : Fichier Excel (.xlsx) téléchargé automatiquement
 - **Volume** : Données transactionnelles de mars 2024
 - **Contenu** : Transactions avec horodatage, produits, prix, quantités, types de paiement
 
 ### 2. Transformation et Nettoyage
+
 ```python
 # Téléchargement automatique depuis Kaggle
 def download_dataset(path):
@@ -79,6 +88,7 @@ dfcopy["recipe"] = dfcopy["transaction_qty"] * dfcopy["unit_price"]
 ```
 
 ### 3. Enrichissement Géographique
+
 - Utilisation de l'API Nominatim pour géolocaliser les magasins
 - Ajout des coordonnées latitude/longitude
 - Gestion des erreurs et timeout pour la robustesse
@@ -91,18 +101,21 @@ for store in unique_stores:
 ```
 
 ### 4. Chargement en Base
+
 - Insertion en lots (chunks) de 1700 enregistrements
 - Gestion des conflits avec `ON CONFLICT DO NOTHING`
 - Optimisation avec indexation multi-colonnes
 
----
+***
 
 ## V. Modélisation des Données
 
 ### Schéma en Étoile (Star Schema)
 
 #### Table de Faits
-**`fact_sales`** - Table centrale des transactions
+
+**`fact_sales`** **fact_sales** **fact_sales** - Table centrale des transactions
+
 - `id_transaction` (PK)
 - `product_id` (FK)
 - `location_id` (FK)
@@ -113,30 +126,34 @@ for store in unique_stores:
 
 #### Tables de Dimensions
 
-**`product`** - Catalogue produit
+**`product`** **product** **product** - Catalogue produit
+
 - `product_id` (PK)
 - `product_detail`
 - `id_categorie` (FK)
 - `id_type` (FK)
 - `unit_price`
 
-**`location_sales`** - Points de vente
+**`location_sales`** **location_sales** **location_sales** - Points de vente
+
 - `id_location` (PK)
 - `store_location`
 - `latitude`
 - `longitude`
 
-**`date_sales`** - Dimension temporelle
+**`date_sales`** **date_sales** **date_sales** - Dimension temporelle
+
 - `id_date` (PK)
 - `full_date`
 - `day`, `weekday`, `month`, `year`
 - `hour`, `time_slot`
 
-**`product_categorie`** & **`product_type`** - Classifications produit
+**`product_categorie`** **product_categorie** **product_categorie** & **`product_type`** **product_type** **product_type** - Classifications produit
 
-**`season`** - Saisons
+**`season`** **season** **season** - Saisons
 
 ### Optimisations Performantes
+
 ```sql
 -- Index composites pour les requêtes analytiques
 CREATE INDEX idx_fact_composite ON fact_sales(product_id, date_id);
@@ -145,13 +162,14 @@ CREATE INDEX idx_fact_sales_location ON fact_sales(location_id);
 ANALYZE fact_sales;
 ```
 
----
+***
 
 ## VI. Traitement et Enrichissement
 
 ### Fonctionnalités Développées
 
 #### 1. Téléchargement Automatisé depuis Kaggle
+
 - **API Kaggle** pour récupération automatique des données
 - **Détection automatique** des fichiers Excel dans le dataset
 - **Nettoyage automatique** des fichiers temporaires après traitement
@@ -166,30 +184,35 @@ def download_dataset(path):
         shutil.rmtree(path)  # Nettoyage des fichiers temporaires
     return df
 ```
+
 - **Tranches horaires** : matin, midi, après-midi, soir, nuit
 - **Dimensions temporelles** : jour, semaine, mois, saison
 - **Analyse des patterns** de consommation
 
 #### 2. Segmentation Temporelle
+
 - **Tranches horaires** : matin, midi, après-midi, soir, nuit
 - **Dimensions temporelles** : jour, semaine, mois, saison
 - **Analyse des patterns** de consommation
 
 #### 3. Géolocalisation Automatique
+
 - **API Nominatim** pour la géolocalisation des adresses
 - **Coordonnées GPS** pour chaque point de vente
 - **Gestion d'erreurs** robuste avec retry logic
 
 #### 4. Calculs Métier
+
 - **Chiffre d'affaires** par transaction
 - **Métriques agrégées** par période et localisation
 - **KPIs business** ready-to-use
 
----
+***
 
 ## VII. Résultats et Insights
 
 ### Métriques Clés Calculées
+
 - Chiffre d'affaires par magasin et période
 - Top produits par catégorie et type
 - Distribution des ventes par tranche horaire
@@ -197,6 +220,7 @@ def download_dataset(path):
 - Analyse géographique des performances
 
 ### Structure de Données Optimisée
+
 - **149,116 transactions** traitées et nettoyées
 - **Modèle normalisé** en 3NF avec star schema
 - **Performance optimisée** avec indexation stratégique
@@ -205,6 +229,7 @@ def download_dataset(path):
 ### Requêtes d'Exploitation Développées
 
 #### 1. Top 5 Produits par Recette Globale
+
 ```sql
 -- Analyse globale des meilleures performances produit
 SELECT 
@@ -225,6 +250,7 @@ LIMIT 5;
 ```
 
 #### 2. Top 5 Produits des Deux Derniers Mois
+
 ```sql
 -- Analyse de performance récente avec CTE pour gestion des dates
 WITH limites_dates AS (
@@ -254,6 +280,7 @@ LIMIT 5;
 ```
 
 #### 3. Meilleur Produit par Recette Mensuelle
+
 ```sql
 -- Évolution du leadership produit avec fonctions de fenêtrage
 WITH ventes_mensuelles AS (
@@ -278,6 +305,7 @@ ORDER BY mois;
 ```
 
 #### 4. Produit le Plus Consommé par Mois (Quantité)
+
 ```sql
 -- Analyse de volume avec ROW_NUMBER pour éliminer les ex-aequo
 WITH ventes_mensuelles AS (
@@ -306,21 +334,24 @@ ORDER BY mois;
 
 **CTE (Common Table Expressions)** : Utilisation pour structurer les requêtes complexes et améliorer la lisibilité, notamment pour les calculs de dates dynamiques.
 
-**Fonctions de Fenêtrage** : 
+**Fonctions de Fenêtrage** :
+
 - `RANK()` : Permet les ex-aequo avec des rangs identiques
 - `ROW_NUMBER()` : Attribution de rangs uniques même en cas d'égalité
 
-**Formatage des Données** : 
+**Formatage des Données** :
+
 - `TO_CHAR()` pour le formatage monétaire avec devise
 - `DATE_TRUNC()` pour l'agrégation temporelle par mois
 
 **Jointures Optimisées** : Star schema permettant des jointures efficaces entre la table de faits et les dimensions.
 
----
+***
 
 ## Notes Techniques
 
 ### Stack Technique
+
 - **Python 3.x** - Langage principal
 - **PostgreSQL** - Base de données relationnelle
 - **SQLAlchemy** - ORM et gestion des connexions
@@ -330,6 +361,7 @@ ORDER BY mois;
 - **KaggleHub** - Téléchargement automatique des datasets
 
 ### Librairies Python
+
 ```python
 import psycopg2
 import pandas as pd
@@ -342,17 +374,19 @@ import os
 import shutil
 ```
 
----
+***
 
 ## IX. Guide d'Installation
 
 ### Prérequis
+
 - Python 3.8+
 - PostgreSQL 12+
 - Compte Kaggle configuré avec API
 - Packages Python requis (voir requirements.txt)
 
 ### Installation
+
 ```bash
 # Cloner le repository
 git clone [repository-url]
@@ -370,6 +404,7 @@ pip install kagglehub
 ```
 
 ### Configuration Base de Données
+
 ```python
 # Paramètres de connexion à ajuster
 conn = psycopg2.connect(
@@ -381,16 +416,18 @@ conn = psycopg2.connect(
 )
 ```
 
----
+***
 
 ## X. Utilisation
 
 ### Exécution du Pipeline Complet
+
 ```bash
 python coffee_sales_etl.py
 ```
 
 ### Étapes d'Exécution
+
 1. **Téléchargement** automatique depuis Kaggle via API
 2. **Création** de la base de données `coffee_sales`
 3. **Nettoyage** et enrichissement des données
@@ -399,44 +436,26 @@ python coffee_sales_etl.py
 6. **Indexation** et optimisation des performances
 
 ### Résultat Attendu
-```
+
+````
 ✅ Dataset téléchargé depuis Kaggle
 ✅ Base 'coffee_sales' créée
 ✅ Dataframe nettoyé: 149,116 lignes & 18 colonnes
 ✅ Tables dimensionnelles créées
 ✅ Données chargées et indexées
 ✅ Pipeline ETL terminé avec succès
-```
+````
 
----
+***
 
-## 🔮 Améliorations Futures
 
-### Évolutions Techniques
-- [ ] **Automatisation** avec Apache Airflow
-- [ ] **Containerisation** avec Docker
-- [ ] **Tests unitaires** et intégration continue
-- [ ] **Monitoring** et alerting des pipelines
-- [ ] **API REST** pour l'accès aux données
 
-### Évolutions Fonctionnelles
-- [ ] **Dashboard interactif** avec Streamlit/Dash
-- [ ] **Prédictions de vente** avec ML
-- [ ] **Analyse de sentiment** des reviews clients
-- [ ] **Optimisation des stocks** avec algorithmes
-- [ ] **Segmentation client** avancée
+***
 
-### Évolutions Data
-- [ ] **Data Lake** pour historique long terme
-- [ ] **Streaming** pour données temps réel
-- [ ] **Data Quality** avec Great Expectations
-- [ ] **Catalogue de données** avec DataHub
-
----
-
-## 📝 Notes Techniques
+## Notes Techniques
 
 ### Bonnes Pratiques Implémentées
+
 - **Gestion des erreurs** robuste
 - **Transactions atomiques** en base
 - **Indexation optimisée** pour les performances
@@ -444,18 +463,8 @@ python coffee_sales_etl.py
 - **Documentation** inline du code
 
 ### Points d'Attention
+
 - **Pause entre requêtes** API Nominatim (1 sec) pour respecter les conditions d'usage
 - **Timeout** de géolocalisation configuré à 10s
 - **Gestion mémoire** avec chunks de 1700 lignes
 - **Validation des types** de données
-
----
-
-## Contributeurs
-- **[Votre Nom]** - Data Engineer Principal
-
-## License
-Ce projet est sous licence MIT - voir le fichier [LICENSE.md](LICENSE.md) pour plus de détails.
-
----
-*Projet réalisé dans le cadre de l'optimisation des performances commerciales d'une chaîne de cafés new-yorkaise*
