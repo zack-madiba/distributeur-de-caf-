@@ -2,7 +2,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-
+import kagglehub
 import psycopg2
 from sqlalchemy import create_engine, text
 import pandas as pd
@@ -62,7 +62,7 @@ conn.close()
 # Connexion avec SQLAlchemy
 engine = create_engine('postgresql+psycopg2://postgres:1212@localhost:5432/coffee_sales')
 df.to_sql('coffee_sales', engine, if_exists='replace', chunksize=1700, index=False)
-print("Table 'coffee_sales' créée avec succès.")
+print("Table coffee_sales créée avec succès.")
 
 print("\nFin de l'execution du script de creation de la base de donnée coffee_sales")
 print("\n=====================================================================================================================================")
@@ -80,6 +80,7 @@ dfcopy["weekday"] = dfcopy["transaction_date"].dt.strftime("%A")
 dfcopy["year"] = dfcopy["transaction_date"].dt.year
 dfcopy['full_date'] = dfcopy['transaction_date'].dt.strftime('%Y-%m-%d')
 
+# Enrichissement des données
 def get_tranche_horaire(hour):
     if 5 <= hour < 12:
         return "matin"
@@ -122,6 +123,8 @@ dfcopy['latitude'] = pd.to_numeric(dfcopy['latitude'], errors='coerce')
 dfcopy['longitude'] = pd.to_numeric(dfcopy['longitude'], errors='coerce')
 dfcopy['recipe'] = pd.to_numeric(dfcopy['recipe'], errors='coerce')
 dfcopy = dfcopy.dropna(subset=['latitude', 'longitude'])
+
+#Clean dataframe to postgres bdd
 dfcopy.to_sql('coffee_sales', engine, if_exists='replace', chunksize=1700, index=False)
 
 print(f"Dataframe nettoyé {dfcopy.shape[0]} lignes & {dfcopy.shape[1]} colonnes")
@@ -150,7 +153,7 @@ inserts = [
     """INSERT INTO product (product_detail, id_categorie, id_type, unit_price) SELECT DISTINCT cs.product_detail, pc.id_categorie, pt.id_type, cs.unit_price FROM coffee_sales cs JOIN product_categorie pc ON cs.product_category = pc.categorie JOIN product_type pt ON cs.product_type = pt.type ON CONFLICT (product_detail) DO NOTHING;""",
     """INSERT INTO fact_sales (id_transaction, product_id, location_id, date_id, season_id, quantity, unit_price) SELECT cs.transaction_id, p.product_id, ls.id_location, ds.id_date, s.id_season, cs.transaction_qty, cs.unit_price FROM coffee_sales cs JOIN product p ON cs.product_detail = p.product_detail JOIN location_sales ls ON CAST(cs.store_location AS VARCHAR) = ls.store_location JOIN date_sales ds ON cs.transaction_date::DATE = ds.full_date JOIN season s ON cs.season = s.name;"""
 ]
-
+#execution des requêtes
 with engine.connect() as conn:
     trans = conn.begin()
     try:

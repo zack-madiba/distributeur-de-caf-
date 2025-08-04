@@ -1,0 +1,12 @@
+*.psql
+coffee_sales_analysis1.md
+*.csv
+*.db
+*.sqlite
+*.dbf
+distributeur-de-caf-/
+consignes.md
+*.json
+*.xlsx
+.ipynb
+test.md
